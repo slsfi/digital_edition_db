@@ -1,1 +1,2 @@
-# digital_edition_web_db
+# The Generic Digital Edition Database Structure
+A PostgreSQL database for digital editions
