@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:11
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: somepassword
+    volumes: 
+      - database:/var/lib/postgresql/data
+      - ./edition_db/db_dump.sql:/tmp/db_dump.sql
+      - ./edition_db/restore.sh:/docker-entrypoint-initdb.d/restore.sh
+    ports:
+      - 5432:5432
+
+  notes_db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: somepassword
+    volumes:
+      - ./notes_db/notes_structure_only.sql:/docker-entrypoint-initdb.d/notes.sql
+      - ./notes_db/users_and_grants.sql:/docker-entrypoint-initdb.d/users_and_grants.sql
+    ports:
+      - "33306:3306"
+
+volumes:
+  database:
