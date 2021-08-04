@@ -7,10 +7,8 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: somepassword
-    volumes: 
-      - database:/var/lib/postgresql/data
+    volumes:
       - ./edition_db/db_dump.sql:/tmp/db_dump.sql
-      - ./edition_db/recreate.sh:/recreate.sh
       - ./edition_db/restore.sh:/docker-entrypoint-initdb.d/restore.sh
     ports:
       - 5432:5432
@@ -26,6 +24,3 @@ services:
       - ./notes_db/users_and_grants.sql:/docker-entrypoint-initdb.d/users_and_grants.sql
     ports:
       - "33306:3306"
-
-volumes:
-  database:
