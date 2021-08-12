@@ -20,19 +20,19 @@ SET row_security = off;
 -- Name: check_original_publication_date(); Type: FUNCTION; Schema: public; Owner: root
 --
 
-CREATE FUNCTION public.check_original_publication_date() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
+CREATE FUNCTION public.check_original_publication_date() RETURNS trigger AS
+    '
 BEGIN
-  IF NEW.original_publication_date ~* '([0-9X]{1,4}-[0-9X]{2}-[0-9X]{2}T?[]?)([0-9]{2}:[0-9]{2}:[0-9]{2})?(\+[0-9]{2}:[0-9]{2})?([ ]BC)?'
+  IF NEW.original_publication_date ~* ''([0-9X]{1,4}-[0-9X]{2}-[0-9X]{2}T?[]?)([0-9]{2}:[0-9]{2}:[0-9]{2})?(\+[0-9]{2}:[0-9]{2})?([ ]BC)?''
   OR NEW.original_publication_date IS NULL
   THEN
     RETURN NEW;
   ELSE 
-    RAISE EXCEPTION 'Invalid original_publication_date';
+    RAISE EXCEPTION ''Invalid original_publication_date'';
   END IF;
 END;
-$$;
+'
+LANGUAGE plpgsql;
 
 
 ALTER FUNCTION public.check_original_publication_date() OWNER TO root;
@@ -41,19 +41,19 @@ ALTER FUNCTION public.check_original_publication_date() OWNER TO root;
 -- Name: check_subject_date_born(); Type: FUNCTION; Schema: public; Owner: root
 --
 
-CREATE FUNCTION public.check_subject_date_born() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
+CREATE FUNCTION public.check_subject_date_born() RETURNS trigger AS
+    '
 BEGIN
-  IF NEW.date_born ~* '([0-9X]{1,4}-[0-9X]{2}-[0-9X]{2}T?[]?)([0-9]{2}:[0-9]{2}:[0-9]{2})?(\+[0-9]{2}:[0-9]{2})?([ ]BC)?'
+  IF NEW.date_born ~* ''([0-9X]{1,4}-[0-9X]{2}-[0-9X]{2}T?[]?)([0-9]{2}:[0-9]{2}:[0-9]{2})?(\+[0-9]{2}:[0-9]{2})?([ ]BC)?''
   OR NEW.date_born IS NULL
   THEN
     RETURN NEW;
   ELSE 
-    RAISE EXCEPTION 'Invalid date_born';
+    RAISE EXCEPTION ''Invalid date_born'';
   END IF;
 END;
-$$;
+' 
+LANGUAGE plpgsql;
 
 
 ALTER FUNCTION public.check_subject_date_born() OWNER TO root;
@@ -62,19 +62,19 @@ ALTER FUNCTION public.check_subject_date_born() OWNER TO root;
 -- Name: check_subject_date_deceased(); Type: FUNCTION; Schema: public; Owner: root
 --
 
-CREATE FUNCTION public.check_subject_date_deceased() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
+CREATE FUNCTION public.check_subject_date_deceased() RETURNS trigger AS
+    '
 BEGIN
-  IF NEW.date_deceased ~* '([0-9X]{1,4}-[0-9X]{2}-[0-9X]{2}T?[]?)([0-9]{2}:[0-9]{2}:[0-9]{2})?(\+[0-9]{2}:[0-9]{2})?([ ]BC)?'
+  IF NEW.date_deceased ~* ''([0-9X]{1,4}-[0-9X]{2}-[0-9X]{2}T?[]?)([0-9]{2}:[0-9]{2}:[0-9]{2})?(\+[0-9]{2}:[0-9]{2})?([ ]BC)?''
   OR NEW.date_deceased IS NULL
   THEN
     RETURN NEW;
   ELSE 
-    RAISE EXCEPTION 'Invalid date_deceased';
+    RAISE EXCEPTION ''Invalid date_deceased'';
   END IF;
 END;
-$$;
+'
+LANGUAGE plpgsql;
 
 
 ALTER FUNCTION public.check_subject_date_deceased() OWNER TO root;
@@ -83,14 +83,14 @@ ALTER FUNCTION public.check_subject_date_deceased() OWNER TO root;
 -- Name: trigger_set_timestamp(); Type: FUNCTION; Schema: public; Owner: root
 --
 
-CREATE FUNCTION public.trigger_set_timestamp() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
+CREATE FUNCTION public.trigger_set_timestamp() RETURNS trigger AS
+    '
 BEGIN
   NEW.updated_at = NOW();
   RETURN NEW;
 END;
-$$;
+'
+LANGUAGE plpgsql;
 
 
 ALTER FUNCTION public.trigger_set_timestamp() OWNER TO root;
@@ -117,7 +117,7 @@ SET default_tablespace = '';
 
 CREATE TABLE public.contributor (
     id bigint DEFAULT nextval('public.contributor_seq'::regclass) NOT NULL,
-    date_created timestamp without time zone DEFAULT '2018-10-12 09:12:28.144759'::timestamp without time zone,
+    date_created timestamp without time zone DEFAULT now(),
     date_modified timestamp without time zone,
     publication_collection_id bigint,
     publication_collection_introduction_id bigint,
@@ -347,7 +347,7 @@ ALTER TABLE public.event_relation_seq OWNER TO root;
 
 CREATE TABLE public.event_relation (
     id bigint DEFAULT nextval('public.event_relation_seq'::regclass) NOT NULL,
-    date_created timestamp without time zone DEFAULT '2018-10-12 09:12:28.729647'::timestamp without time zone,
+    date_created timestamp without time zone DEFAULT now(),
     date_modified timestamp without time zone,
     event_id bigint,
     related_event_id bigint,
@@ -987,7 +987,7 @@ ALTER TABLE public.publication_facsimile_zone_seq OWNER TO root;
 
 CREATE TABLE public.publication_facsimile_zone (
     id bigint DEFAULT nextval('public.publication_facsimile_zone_seq'::regclass) NOT NULL,
-    date_created timestamp without time zone DEFAULT '2018-10-12 09:12:28.758617'::timestamp without time zone,
+    date_created timestamp without time zone DEFAULT now(),
     date_modified timestamp without time zone,
     deleted smallint DEFAULT 0,
     publication_facsimile_id bigint
@@ -1016,7 +1016,7 @@ ALTER TABLE public.publication_group_seq OWNER TO root;
 
 CREATE TABLE public.publication_group (
     id bigint DEFAULT nextval('public.publication_group_seq'::regclass) NOT NULL,
-    date_created timestamp without time zone DEFAULT '2018-10-12 09:12:27.977918'::timestamp without time zone,
+    date_created timestamp without time zone DEFAULT now(),
     date_modified timestamp without time zone,
     deleted smallint DEFAULT 0,
     published smallint DEFAULT 0,
@@ -1182,7 +1182,7 @@ ALTER TABLE public.review_comment_seq OWNER TO root;
 CREATE TABLE public.review_comment (
     id bigint DEFAULT nextval('public.review_comment_seq'::regclass) NOT NULL,
     publication_id bigint,
-    date_created timestamp without time zone DEFAULT '2018-10-12 09:12:28.800318'::timestamp without time zone,
+    date_created timestamp without time zone DEFAULT now(),
     date_modified timestamp without time zone,
     deleted smallint DEFAULT 0,
     comment text,
